@@ -52,7 +52,7 @@ describe('The balloon function', function () {
         await theBalloonShop.requestColor('Lime');
 
         assert.equal(4, await theBalloonShop.colorCount('Orange'));
-        assert.equal(1, theBalloonShop.colorCount('Lime'));
+        assert.equal(1, await theBalloonShop.colorCount('Lime'));
         assert.equal(2, await theBalloonShop.colorCount('Purple'));
 
     })
