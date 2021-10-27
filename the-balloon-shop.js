@@ -28,7 +28,7 @@ module.exports = (pool, validColors) => {
 
     async function colorCount(color) {
         let results = await pool.query(`select count from invalid_color where color_name = '${color}'`);
-        
+
         return results.rows.length
     }
 
@@ -40,24 +40,24 @@ module.exports = (pool, validColors) => {
         for (const i in results.rows) {
             arrHolder
             arrHolder.push(results.rows[i]['color_name'])
-            
+
         }
         return arrHolder
     }
 
     async function allColors() {
-        let arrHolder=[]
-        let results = await pool.query(`select valid_color.color_name,invalid_color.color_name from valid_color,invalid_color`)
-        for(const i of results.rows){
-            // arrHolder.concat()
-            console.log(results.rows);
-            validColors.push(results.rows[i]['color_name'])
+        let arrHolder = []
 
-            arrHolder.concat(validColors)
-            
+        let results = await pool.query(`select invalid_color.color_name  from invalid_color`)
+
+        for (const i of results.rows) {
+
+            arrHolder.push(Object.values(i))
+
+
         }
-        
-        return validColors
+
+        return validColors.concat(arrHolder).flat()
     }
 
     return {

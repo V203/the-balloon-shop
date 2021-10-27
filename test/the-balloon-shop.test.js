@@ -64,7 +64,7 @@ describe('The balloon function', function () {
         await theBalloonShop.requestColor('Blue')
         await theBalloonShop.requestColor('Red')
 
-        assert.equal(['Orange', 'Purple', 'Lime', 'Blue', 'Red'], await theBalloonShop.allColors());
+        assert.deepEqual(['Orange', 'Purple', 'Lime', 'Blue', 'Red'], await theBalloonShop.allColors());
 
     })
 
@@ -80,12 +80,12 @@ describe('The balloon function', function () {
         await theBalloonShop.requestColor('Blue')
         await theBalloonShop.requestColor('Blue')
 
-        assert.equal(['Blue', 'Red'], theBalloonShop.getInValidColors());
+        assert.equal(['Blue', 'Red'], theBalloonShop.getInvalidColors());
 
         await theBalloonShop.requestColor('Blue')
 
         assert.equal(['Blue'], await theBalloonShop.getValidColors());
-        assert.equal(['Red'], await theBalloonShop.getInValidColors());
+        assert.equal(['Red'], await theBalloonShop.getInvalidColors());
 
     });
 
