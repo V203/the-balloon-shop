@@ -1,63 +1,32 @@
 module.exports = (pool, validColors) => {
 
-
-    // insert valid colors into the database here
-
-
-
-
     async function getValidColors() {
-        let results = await pool.query(`select valid_color.color_name from valid_color`)
-
-        let arrHolder = []
-        for (const i in results.rows) {
-            arrHolder
-            arrHolder.push(results.rows[i]['color_name'])
-
-        }
-        return validColors
-    }
-
-    async function requestColor(color) {
-        count = 1
-        await pool.query(`insert into invalid_color(color_name,count) values('${color}' ,${count++})`)
-
-
-
-    }
-
-    async function colorCount(color) {
-        let results = await pool.query(`select count from invalid_color where color_name = '${color}'`);
-
-        return results.rows.length
+        let results = await pool.query(`select color_name from valid_color`)
+        return results.rows.map((elem) => { return elem.color_name})
     }
 
     async function getInvalidColors() {
+        let results = await pool.query(`select color_name from invalid_color`)
+        return  results.rows.map((elem) => { return elem.color_name });
+    }
 
-        let results = await pool.query(`select invalid_color.color_name from invalid_color`)
+    async function requestColor(color) {
+        await pool.query(`insert into invalid_color(color_name,count) values('${color}' ,1) ON CONFLICT (color_name) DO UPDATE  SET count=invalid_color.count+1`)
+    }
 
-        let arrHolder = []
-        for (const i in results.rows) {
-            arrHolder
-            arrHolder.push(results.rows[i]['color_name'])
-
-        }
-        return arrHolder
+    async function colorCount(color) {
+        let results = await pool.query(`select invalid_color.count from invalid_color,valid_color where invalid_color.color_name = '${color}'`);
+        return results.rows[0]['count']
     }
 
     async function allColors() {
-        let arrHolder = []
 
-        let results = await pool.query(`select invalid_color.color_name  from invalid_color`)
+        let results = await pool.query(`select valid_color.color_name from valid_color UNION ALL select invalid_color.color_name from invalid_color`)
+        return  results = results.rows.map((elem) => {return elem.color_name})
+    }
 
-        for (const i of results.rows) {
-
-            arrHolder.push(Object.values(i))
-
-
-        }
-
-        return validColors.concat(arrHolder).flat()
+    async function requestColor_V_II(color) {
+        await pool.query(`insert into invalid_color(color_name,count) values('${color}' ,1) ON CONFLICT (color_name) DO update set count = invalid_color.count + 1  where invalid_color.count > 5  (  insert into valid_color(color_name,count) values('${color}' ,1)))`)
     }
 
     return {
@@ -65,6 +34,7 @@ module.exports = (pool, validColors) => {
         requestColor,
         colorCount,
         getInvalidColors,
-        allColors
+        allColors,
+        requestColor_V_II
     }
 }
