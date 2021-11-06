@@ -33,3 +33,4 @@ Add a **travis badge** for your tests.
 
 Commit your code to GitHub and send it to `mentors@projectcodex.co`.
 
+[![Build Status](https://app.travis-ci.com/V203/the-balloon-shop.svg?branch=main)](https://app.travis-ci.com/V203/the-balloon-shop)
